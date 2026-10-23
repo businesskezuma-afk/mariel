@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velvet Crumbs | Artisan Bakery & Cafe</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        chocolate: {
+                            50: '#F5EBE6',
+                            100: '#EAD7CE',
+                            800: '#3D2314',
+                            900: '#2C1810',
+                            950: '#1F100A',
+                        },
+                        cream: {
+                            50: '#FFFFFF',
+                            100: '#FDFBF7',
+                            200: '#F4EFEA',
+                            300: '#E8E1DA',
+                        },
+                        gold: {
+                            400: '#E2C387',
+                            500: '#C5A880',
+                            600: '#A6875C',
+                        }
+                    },
+                    fontFamily: {
+                        playfair: ['"Playfair Display"', 'serif'],
+                        inter: ['"Inter"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF7;
+            color: #2C1810;
+        }
+        h1, h2, h3, h4, .font-playfair {
+            font-family: 'Playfair Display', serif;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F4EFEA;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #C5A880;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-cream-100 text-chocolate-900 selection:bg-gold-500 selection:text-white">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-32 opacity-0 transition-all duration-300 bg-chocolate-900 text-cream-100 px-6 py-3 rounded-xl shadow-2xl flex items-center space-x-3 border border-gold-500/30">
+        <i class="fa-solid fa-circle-check text-gold-400 text-xl"></i>
+        <div>
+            <p id="toast-title" class="font-semibold text-sm">Added to bag</p>
+            <p id="toast-msg" class="text-xs text-cream-300">Item successfully added to your order.</p>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-40 bg-cream-100/90 backdrop-blur-md border-b border-cream-300 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Brand Logo -->
+                <a href="#" class="flex items-center space-x-2 group">
+                    <div class="w-10 h-10 rounded-full bg-chocolate-900 flex items-center justify-center text-gold-400 shadow-md group-hover:scale-105 transition">
+                        <i class="fa-solid fa-cookie-bite text-lg"></i>
+                    </div>
+                    <div>
+                        <span class="font-playfair font-bold text-2xl tracking-wide text-chocolate-900">Velvet Crumbs</span>
+                        <span class="block text-[10px] tracking-widest uppercase text-gold-600 font-semibold">Artisan Bakery & Cafe</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Nav Links -->
+                <div class="hidden md:flex items-center space-x-8 font-medium text-sm">
+                    <a href="#home" class="hover:text-gold-600 transition">Home</a>
+                    <a href="#about" class="hover:text-gold-600 transition">Our Story</a>
+                    <a href="#menu" class="hover:text-gold-600 transition">Menu</a>
+                    <a href="#contact" class="hover:text-gold-600 transition">Contact</a>
+                </div>
+
+                <!-- Right Actions: Cart & Mobile Menu Button -->
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleCart()" aria-label="Shopping Cart" class="relative p-3 rounded-full bg-cream-200 hover:bg-gold-500 hover:text-white transition text-chocolate-900 shadow-sm">
+                        <i class="fa-solid fa-bag-shopping text-lg"></i>
+                        <span id="cart-badge" class="absolute -top-1 -right-1 bg-chocolate-900 text-gold-400 text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-cream-100 scale-0 transition-transform duration-300">0</span>
+                    </button>
+                    <button onclick="toggleMobileMenu()" aria-label="Mobile Navigation Menu" class="md:hidden p-2 text-chocolate-900 hover:text-gold-600 focus:outline-none">
+                        <i id="mobile-menu-icon" class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-cream-200 border-b border-cream-300 px-6 py-4 space-y-3">
+            <a href="#home" onclick="toggleMobileMenu()" class="block font-medium text-chocolate-900 hover:text-gold-600">Home</a>
+            <a href="#about" onclick="toggleMobileMenu()" class="block font-medium text-chocolate-900 hover:text-gold-600">Our Story</a>
+            <a href="#menu" onclick="toggleMobileMenu()" class="block font-medium text-chocolate-900 hover:text-gold-600">Menu</a>
+            <a href="#contact" onclick="toggleMobileMenu()" class="block font-medium text-chocolate-900 hover:text-gold-600">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative overflow-hidden bg-gradient-to-b from-cream-200 to-cream-100 py-20 lg:py-32">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center space-x-2 bg-chocolate-900/5 px-4 py-2 rounded-full border border-chocolate-900/10">
+                        <i class="fa-solid fa-award text-gold-500"></i>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-chocolate-800">Crafted with Passion Daily</span>
+                    </div>
+                    <h1 class="font-playfair text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-chocolate-900 leading-[1.1]">
+                        Where Every Bite is <span class="italic text-gold-600">Pure Luxury.</span>
+                    </h1>
+                    <p class="text-chocolate-800/80 text-base sm:text-lg max-w-xl mx-auto lg:mx-0 font-light">
+                        Indulge in our artisanal cookies, rich fudge brownies, exquisite gourmet cakes, and velvety smooth specialty coffees. Baked fresh every morning to elevate your day.
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 pt-2">
+                        <a href="#menu" class="px-8 py-4 bg-chocolate-900 text-cream-100 rounded-full font-medium shadow-lg hover:bg-chocolate-800 hover:shadow-xl transition transform hover:-translate-y-0.5 text-center">
+                            Explore Menu <i class="fa-solid fa-arrow-right ml-2 text-gold-400"></i>
+                        </a>
+                        <a href="#about" class="px-8 py-4 bg-cream-200 text-chocolate-900 border border-chocolate-900/20 rounded-full font-medium hover:bg-cream-300 transition text-center">
+                            Our Story
+                        </a>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 pt-8 border-t border-chocolate-900/10 max-w-md mx-auto lg:mx-0 text-center lg:text-left">
+                        <div>
+                            <p class="font-playfair text-2xl font-bold text-chocolate-900">100%</p>
+                            <p class="text-xs text-chocolate-800/70">Organic Butter</p>
+                        </div>
+                        <div>
+                            <p class="font-playfair text-2xl font-bold text-chocolate-900">Fresh</p>
+                            <p class="text-xs text-chocolate-800/70">Baked Daily</p>
+                        </div>
+                        <div>
+                            <p class="font-playfair text-2xl font-bold text-chocolate-900">Artisan</p>
+                            <p class="text-xs text-chocolate-800/70">Coffee Beans</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:col-span-5 relative">
+                    <div class="relative mx-auto w-72 h-72 sm:w-96 sm:h-96 lg:w-[450px] lg:h-[450px]">
+                        <div class="absolute inset-0 bg-gold-400/20 rounded-full filter blur-2xl"></div>
+                        <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80" 
+                             alt="Delicious Pastries and Coffee" 
+                             class="relative rounded-3xl object-cover w-full h-full shadow-2xl border-4 border-cream-100 transform rotate-1 hover:rotate-0 transition duration-500">
+                        <div class="absolute -bottom-6 -left-6 bg-cream-100 p-4 rounded-2xl shadow-xl border border-cream-300 flex items-center space-x-3">
+                            <div class="w-12 h-12 bg-gold-500/20 text-gold-600 rounded-xl flex items-center justify-center text-xl font-bold">
+                                <i class="fa-solid fa-mug-hot"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-chocolate-800/70 font-medium">Specialty Blend</p>
+                                <p class="font-playfair font-bold text-chocolate-900">Arabica & Robusta</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 bg-cream-100 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-6 grid grid-cols-2 gap-4">
+                    <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80" alt="Freshly baked artisan bread and cookies" class="rounded-2xl object-cover w-full h-64 shadow-lg">
+                    <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80" alt="Pouring coffee" class="rounded-2xl object-cover w-full h-64 shadow-lg mt-8">
+                </div>
+                <div class="lg:col-span-6 space-y-6">
+                    <div class="inline-flex items-center space-x-2 bg-gold-500/10 px-4 py-2 rounded-full border border-gold-500/20">
+                        <i class="fa-solid fa-heart text-gold-600"></i>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-chocolate-800">Our Cozy Beginning</span>
+                    </div>
+                    <h2 class="font-playfair text-3xl sm:text-5xl font-bold text-chocolate-900 leading-tight">
+                        Crafting Sweet Moments & Warm Memories
+                    </h2>
+                    <p class="text-chocolate-800/80 font-light leading-relaxed">
+                        Founded out of a deep love for comforting aromas and decadent flavors, Velvet Crumbs started as a small home kitchen dream. Today, we remain dedicated to crafting artisan treats using only premium Belgian chocolate, European butter, and ethically sourced coffee beans.
+                    </p>
+                    <p class="text-chocolate-800/80 font-light leading-relaxed">
+                        Whether you are pausing for a quiet morning coffee, celebrating a milestone with our signature cakes, or sharing melt-in-your-mouth brownies and cookies with loved ones, we invite you to savor every single crumb.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu" class="py-24 bg-cream-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto space-y-4 mb-12">
+                <span class="text-xs font-semibold uppercase tracking-widest text-gold-600">Handcrafted Delights</span>
+                <h2 class="font-playfair text-3xl sm:text-5xl font-bold text-chocolate-900">Our Signature Menu</h2>
+                <p class="text-chocolate-800/80 font-light">Explore our decadent cookies, rich brownies, exquisite cakes, and freshly brewed coffee in Philippine Pesos (₱).</p>
+                
+                <!-- Category Filter Buttons -->
+                <div id="category-filters" class="flex flex-wrap justify-center gap-2 pt-6">
+                    <button onclick="filterMenu('all')" class="filter-btn px-6 py-2.5 rounded-full text-sm font-medium transition bg-chocolate-900 text-cream-100 shadow-md" data-category="all">All Items</button>
+                    <button onclick="filterMenu('cookies')" class="filter-btn px-6 py-2.5 rounded-full text-sm font-medium transition bg-cream-100 text-chocolate-900 hover:bg-cream-300 border border-cream-300" data-category="cookies">Cookies</button>
+                    <button onclick="filterMenu('brownies')" class="filter-btn px-6 py-2.5 rounded-full text-sm font-medium transition bg-cream-100 text-chocolate-900 hover:bg-cream-300 border border-cream-300" data-category="brownies">Brownies</button>
+                    <button onclick="filterMenu('cake')" class="filter-btn px-6 py-2.5 rounded-full text-sm font-medium transition bg-cream-100 text-chocolate-900 hover:bg-cream-300 border border-cream-300" data-category="cake">Cakes</button>
+                    <button onclick="filterMenu('coffee')" class="filter-btn px-6 py-2.5 rounded-full text-sm font-medium transition bg-cream-100 text-chocolate-900 hover:bg-cream-300 border border-cream-300" data-category="coffee">Coffee</button>
+                </div>
+            </div>
+
+            <!-- Menu Grid -->
+            <div id="menu-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"></div>
+        </div>
+    </section>
+
+    <!-- Contact & Order Inquiry Section -->
+    <section id="contact" class="py-24 bg-cream-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                <div class="lg:col-span-5 space-y-8">
+                    <div>
+                        <span class="text-xs font-semibold uppercase tracking-widest text-gold-600">Get in Touch</span>
+                        <h2 class="font-playfair text-3xl sm:text-4xl font-bold text-chocolate-900 mt-2">We'd Love to Hear From You</h2>
+                        <p class="text-chocolate-800/80 font-light mt-3">Have questions about custom cake orders, catering, or our menu? Send us a message or visit our cozy cafe.</p>
+                    </div>
+                </div>
+                <div class="lg:col-span-7 bg-cream-200 p-8 sm:p-10 rounded-3xl border border-cream-300 shadow-xl">
+                    <form id="contact-form" onsubmit="handleContactSubmit(event)" class="space-y-6">
+                        <h3 class="font-playfair text-2xl font-bold text-chocolate-900">Send an Inquiry</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-chocolate-800 mb-2">Your Name</label>
+                                <input type="text" required class="w-full px-4 py-3 bg-cream-100 border border-cream-300 rounded-xl text-sm" placeholder="Jane Doe">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-chocolate-800 mb-2">Email Address</label>
+                                <input type="email" required class="w-full px-4 py-3 bg-cream-100 border border-cream-300 rounded-xl text-sm" placeholder="jane@example.com">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-chocolate-800 mb-2">Your Message</label>
+                            <textarea rows="4" required class="w-full px-4 py-3 bg-cream-100 border border-cream-300 rounded-xl text-sm" placeholder="Tell us how we can make your day sweeter..."></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-4 bg-chocolate-900 text-cream-100 rounded-xl font-medium shadow-md hover:bg-chocolate-800 transition">
+                            Send Message <i class="fa-solid fa-paper-plane ml-2 text-gold-400"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-chocolate-950 text-cream-200 py-16 border-t border-chocolate-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-cream-300/70">
+            <p>&copy; 2026 Velvet Crumbs Bakery & Cafe. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Cart Drawer -->
+    <div id="cart-overlay" onclick="toggleCart()" class="fixed inset-0 bg-chocolate-950/60 backdrop-blur-sm z-50 hidden transition-opacity opacity-0"></div>
+    <div id="cart-drawer" class="fixed top-0 right-0 h-full w-full sm:w-96 bg-cream-100 z-50 shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
+        <div class="p-6 border-b border-cream-300 flex justify-between items-center bg-cream-200">
+            <h3 class="font-playfair font-bold text-xl text-chocolate-900">Your Order Bag</h3>
+            <button onclick="toggleCart()" class="w-8 h-8 rounded-full bg-cream-100 text-chocolate-900 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4 divide-y divide-cream-200"></div>
+        <div class="p-6 border-t border-cream-300 bg-cream-200 space-y-4">
+            <div class="flex justify-between text-base font-bold text-chocolate-900">
+                <span>Total</span>
+                <span id="cart-total" class="text-gold-600">₱0.00</span>
+            </div>
+            <button onclick="openCheckoutModal()" id="checkout-btn" class="w-full py-3.5 bg-chocolate-900 text-cream-100 rounded-xl font-medium">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <!-- JavaScript with PHP (₱) Currency -->
+    <script>
+        const menuItems = [
+            { id: 1, name: "Classic Choc Chip Cookie", category: "cookies", price: 180, description: "Crispy golden edges with a delightfully chewy center loaded with premium Belgian chocolate chunks.", image: "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=600&q=80" },
+            { id: 2, name: "Double Fudge Walnut Cookie", category: "cookies", price: 220, description: "Deep dark cocoa cookie dough studded with toasted walnuts and rich dark chocolate drops.", image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=600&q=80" },
+            { id: 3, name: "Brown Butter Pecan Cookie", category: "cookies", price: 230, description: "Nuttiness of browned butter paired with toasted roasted pecans and brown sugar caramel notes.", image: "https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?auto=format&fit=crop&w=600&q=80" },
+            { id: 4, name: "Signature Velvet Fudge Brownie", category: "brownies", price: 250, description: "Extremely fudgy, decadent single-origin dark chocolate brownie with a shiny crinkle top.", image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=600&q=80" },
+            { id: 5, name: "Salted Caramel Brownie Bar", category: "brownies", price: 280, description: "Rich fudge brownie bar with a molten caramel center, generously drizzled with house-made salted caramel and flaky sea salt.", image: "https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=600&q=80" },
+            { id: 6, name: "Decadent Belgian Chocolate Cake", category: "cake", price: 380, description: "Three layers of moist chocolate sponge drenched in silky chocolate ganache and chocolate curls.", image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80" },
+            { id: 7, name: "Burnt Basque Cheesecake", category: "cake", price: 360, description: "Ultra-creamy flourless cheesecake with a caramelized burnt top and velvety interior.", image: "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=600&q=80" },
+            { id: 8, name: "Vanilla Bean Strawberry Shortcake", category: "cake", price: 370, description: "Light chiffon cake layered with fresh Madagascar vanilla chantilly cream and juicy strawberries.", image: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=600&q=80" },
+            { id: 9, name: "Velvet Signature Latte", category: "coffee", price: 220, description: "Double shot of artisan espresso with steamed velvety whole milk and a touch of vanilla syrup.", image: "https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=600&q=80" },
+            { id: 10, name: "Rich Spanish Latte", category: "coffee", price: 240, description: "Bold espresso blended with textured sweet condensed milk and whole milk over ice or hot.", image: "https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=600&q=80" },
+            { id: 11, name: "Spanish Cold Brew", category: "coffee", price: 200, description: "Steeped for 24 hours for a smooth, low-acidity coffee experience served crisp over ice.", image: "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=600&q=80" }
+        ];
+
+        let cart = [];
+
+        function renderMenu(category = 'all') {
+            const grid = document.getElementById('menu-grid');
+            grid.innerHTML = '';
+            const filtered = category === 'all' ? menuItems : menuItems.filter(item => item.category === category);
+            filtered.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-cream-100 rounded-3xl overflow-hidden border border-cream-300 shadow-sm hover:shadow-xl transition flex flex-col justify-between group";
+                card.innerHTML = `
+                    <div class="relative overflow-hidden h-52 bg-cream-200">
+                        <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <span class="absolute top-3 right-3 bg-chocolate-900/80 text-gold-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase">${item.category}</span>
+                    </div>
+                    <div class="p-6 flex flex-col flex-1 justify-between space-y-4">
+                        <div>
+                            <div class="flex justify-between items-start mb-1">
+                                <h3 class="font-playfair font-bold text-lg text-chocolate-900">${item.name}</h3>
+                                <span class="font-bold text-gold-600">₱${item.price.toFixed(2)}</span>
+                            </div>
+                            <p class="text-xs text-chocolate-800/70 leading-relaxed">${item.description}</p>
+                        </div>
+                        <button onclick="addToCart(${item.id})" class="w-full py-2.5 bg-chocolate-900 text-cream-100 rounded-xl text-xs font-semibold hover:bg-gold-500 hover:text-chocolate-900 transition flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-plus"></i><span>Add to Bag</span>
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterMenu(category) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if(btn.getAttribute('data-category') === category) {
+                    btn.className = "filter-btn px-6 py-2.5 rounded-full text-sm font-medium transition bg-chocolate-900 text-cream-100 shadow-md";
+                } else {
+                    btn.className = "filter-btn px-6 py-2.5 rounded-full text-sm font-medium transition bg-cream-100 text-chocolate-900 hover:bg-cream-300 border border-cream-300";
+                }
+            });
+            renderMenu(category);
+        }
+
+        function addToCart(id) {
+            const product = menuItems.find(item => item.id === id);
+            const existing = cart.find(item => item.id === id);
+            if(existing) { existing.quantity += 1; } else { cart.push({ ...product, quantity: 1 }); }
+            updateCartUI();
+            showToast("Added to bag", `${product.name} added.`);
+        }
+
+        function updateQuantity(id, change) {
+            const item = cart.find(i => i.id === id);
+            if(item) {
+                item.quantity += change;
+                if(item.quantity <= 0) { cart = cart.filter(i => i.id !== id); }
+            }
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cart-items-container');
+            const badge = document.getElementById('cart-badge');
+            const totalEl = document.getElementById('cart-total');
+            container.innerHTML = '';
+            let totalCount = 0, total = 0;
+            if(cart.length === 0) {
+                container.innerHTML = `<div class="text-center py-12"><p class="text-xs text-chocolate-800/70">Your bag is empty.</p></div>`;
+            } else {
+                cart.forEach(item => {
+                    totalCount += item.quantity;
+                    total += item.price * item.quantity;
+                    const div = document.createElement('div');
+                    div.className = "flex items-center justify-between py-4";
+                    div.innerHTML = `
+                        <div class="flex items-center space-x-3">
+                            <img src="${item.image}" class="w-14 h-14 object-cover rounded-xl">
+                            <div><h4 class="font-playfair font-bold text-sm">${item.name}</h4><p class="text-xs text-gold-600 font-semibold">₱${item.price.toFixed(2)}</p></div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="updateQuantity(${item.id}, -1)" class="w-6 h-6 rounded-lg bg-cream-200 text-xs font-bold">-</button>
+                            <span class="text-xs font-bold w-4 text-center">${item.quantity}</span>
+                            <button onclick="updateQuantity(${item.id}, 1)" class="w-6 h-6 rounded-lg bg-cream-200 text-xs font-bold">+</button>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+            }
+            badge.innerText = totalCount;
+            totalCount > 0 ? badge.classList.remove('scale-0') : badge.classList.add('scale-0');
+            totalEl.innerText = `₱${total.toFixed(2)}`;
+        }
+
+        function toggleCart() {
+            const drawer = document.getElementById('cart-drawer');
+            const overlay = document.getElementById('cart-overlay');
+            drawer.classList.toggle('translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        function openCheckoutModal() { toggleCart(); alert('Order placed successfully with Philippine Peso (₱) pricing!'); cart = []; updateCartUI(); }
+        function handleContactSubmit(e) { e.preventDefault(); e.target.reset(); alert('Message sent successfully!'); }
+        function showToast(title, msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-title').innerText = title;
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.remove('translate-y-32', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-y-32', 'opacity-0'), 3000);
+        }
+
+        window.onload = () => renderMenu('all');
+    </script>
+</body>
+</html>
